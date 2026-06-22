@@ -1,6 +1,6 @@
---- a/src/http/ngx_http_special_response.c	2026-04-22 17:09:05.592506524 +0800
-+++ b/src/http/ngx_http_special_response.c	2026-04-22 17:08:32.543834386 +0800
-@@ -19,21 +19,18 @@ static ngx_int_t ngx_http_send_refresh(n
+--- a/src/http/ngx_http_special_response.c	2026-06-22 13:56:16.559597779 +0800
++++ b/src/http/ngx_http_special_response.c	2026-06-22 13:56:26.252027647 +0800
+@@ -19,21 +19,18 @@
  
  
  static u_char ngx_http_error_full_tail[] =
@@ -22,329 +22,1124 @@
  "</body>" CRLF
  "</html>" CRLF
  ;
-@@ -61,7 +58,7 @@ static char ngx_http_error_301_page[] =
+@@ -59,289 +56,1003 @@
+ 
+ static char ngx_http_error_301_page[] =
  "<html>" CRLF
- "<head><title>301 Moved Permanently</title></head>" CRLF
- "<body>" CRLF
+-"<head><title>301 Moved Permanently</title></head>" CRLF
+-"<body>" CRLF
 -"<center><h1>301 Moved Permanently</h1></center>" CRLF
-+"<p style='text-align:center;padding-top:30px;'><span style='color:#fff;background:#ff5050;box-shadow:#ffe000 5px 5px 2px;padding:5px 50px;font-size:24px;font-weight:600;'>301 Moved Permanently</span></p>" CRLF
++"<head>" CRLF
++"  <meta charset='utf-8'>" CRLF
++"  <meta name='viewport' content='width=device-width, initial-scale=1.0'>" CRLF
++"  <title>301 Moved Permanently</title>" CRLF
++"  <style>" CRLF
++"    * { margin: 0; padding: 0; box-sizing: border-box; }" CRLF
++"    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; }" CRLF
++"    .container { text-align: center; padding: 40px; max-width: 600px; }" CRLF
++"    .error-code { font-size: 120px; font-weight: 900; color: #fff; text-shadow: 0 10px 30px rgba(0,0,0,0.3); margin-bottom: 20px; }" CRLF
++"    h1 { color: #fff; font-size: 36px; margin-bottom: 16px; font-weight: 600; }" CRLF
++"  </style>" CRLF
++"</head>" CRLF
++"<body>" CRLF
++"<div class='container'>" CRLF
++"  <div class='error-code'>301</div>" CRLF
++"  <h1>Moved Permanently</h1>" CRLF
++"</div>" CRLF
  ;
  
  
-@@ -69,7 +66,7 @@ static char ngx_http_error_302_page[] =
+ static char ngx_http_error_302_page[] =
  "<html>" CRLF
- "<head><title>302 Found</title></head>" CRLF
- "<body>" CRLF
+-"<head><title>302 Found</title></head>" CRLF
+-"<body>" CRLF
 -"<center><h1>302 Found</h1></center>" CRLF
-+"<p style='text-align:center;padding-top:30px;'><span style='color:#fff;background:#ff5050;box-shadow:#ffe000 5px 5px 2px;padding:5px 50px;font-size:24px;font-weight:600;'>302 Found</span></p>" CRLF
++"<head>" CRLF
++"  <meta charset='utf-8'>" CRLF
++"  <meta name='viewport' content='width=device-width, initial-scale=1.0'>" CRLF
++"  <title>302 Found</title>" CRLF
++"  <style>" CRLF
++"    * { margin: 0; padding: 0; box-sizing: border-box; }" CRLF
++"    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; }" CRLF
++"    .container { text-align: center; padding: 40px; max-width: 600px; }" CRLF
++"    .error-code { font-size: 120px; font-weight: 900; color: #fff; text-shadow: 0 10px 30px rgba(0,0,0,0.3); margin-bottom: 20px; }" CRLF
++"    h1 { color: #fff; font-size: 36px; margin-bottom: 16px; font-weight: 600; }" CRLF
++"  </style>" CRLF
++"</head>" CRLF
++"<body>" CRLF
++"<div class='container'>" CRLF
++"  <div class='error-code'>302</div>" CRLF
++"  <h1>Found</h1>" CRLF
++"</div>" CRLF
  ;
  
  
-@@ -77,7 +74,7 @@ static char ngx_http_error_303_page[] =
+ static char ngx_http_error_303_page[] =
  "<html>" CRLF
- "<head><title>303 See Other</title></head>" CRLF
- "<body>" CRLF
+-"<head><title>303 See Other</title></head>" CRLF
+-"<body>" CRLF
 -"<center><h1>303 See Other</h1></center>" CRLF
-+"<p style='text-align:center;padding-top:30px;'><span style='color:#fff;background:#ff5050;box-shadow:#ffe000 5px 5px 2px;padding:5px 50px;font-size:24px;font-weight:600;'>303 See Other</span></p>" CRLF
++"<head>" CRLF
++"  <meta charset='utf-8'>" CRLF
++"  <meta name='viewport' content='width=device-width, initial-scale=1.0'>" CRLF
++"  <title>303 See Other</title>" CRLF
++"  <style>" CRLF
++"    * { margin: 0; padding: 0; box-sizing: border-box; }" CRLF
++"    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; }" CRLF
++"    .container { text-align: center; padding: 40px; max-width: 600px; }" CRLF
++"    .error-code { font-size: 120px; font-weight: 900; color: #fff; text-shadow: 0 10px 30px rgba(0,0,0,0.3); margin-bottom: 20px; }" CRLF
++"    h1 { color: #fff; font-size: 36px; margin-bottom: 16px; font-weight: 600; }" CRLF
++"  </style>" CRLF
++"</head>" CRLF
++"<body>" CRLF
++"<div class='container'>" CRLF
++"  <div class='error-code'>303</div>" CRLF
++"  <h1>See Other</h1>" CRLF
++"</div>" CRLF
  ;
  
  
-@@ -85,7 +82,7 @@ static char ngx_http_error_307_page[] =
+ static char ngx_http_error_307_page[] =
  "<html>" CRLF
- "<head><title>307 Temporary Redirect</title></head>" CRLF
- "<body>" CRLF
+-"<head><title>307 Temporary Redirect</title></head>" CRLF
+-"<body>" CRLF
 -"<center><h1>307 Temporary Redirect</h1></center>" CRLF
-+"<p style='text-align:center;padding-top:30px;'><span style='color:#fff;background:#ff5050;box-shadow:#ffe000 5px 5px 2px;padding:5px 50px;font-size:24px;font-weight:600;'>307 Temporary Redirect</span></p>" CRLF
++"<head>" CRLF
++"  <meta charset='utf-8'>" CRLF
++"  <meta name='viewport' content='width=device-width, initial-scale=1.0'>" CRLF
++"  <title>307 Temporary Redirect</title>" CRLF
++"  <style>" CRLF
++"    * { margin: 0; padding: 0; box-sizing: border-box; }" CRLF
++"    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; }" CRLF
++"    .container { text-align: center; padding: 40px; max-width: 600px; }" CRLF
++"    .error-code { font-size: 120px; font-weight: 900; color: #fff; text-shadow: 0 10px 30px rgba(0,0,0,0.3); margin-bottom: 20px; }" CRLF
++"    h1 { color: #fff; font-size: 36px; margin-bottom: 16px; font-weight: 600; }" CRLF
++"  </style>" CRLF
++"</head>" CRLF
++"<body>" CRLF
++"<div class='container'>" CRLF
++"  <div class='error-code'>307</div>" CRLF
++"  <h1>Temporary Redirect</h1>" CRLF
++"</div>" CRLF
  ;
  
  
-@@ -93,7 +90,7 @@ static char ngx_http_error_308_page[] =
+ static char ngx_http_error_308_page[] =
  "<html>" CRLF
- "<head><title>308 Permanent Redirect</title></head>" CRLF
- "<body>" CRLF
+-"<head><title>308 Permanent Redirect</title></head>" CRLF
+-"<body>" CRLF
 -"<center><h1>308 Permanent Redirect</h1></center>" CRLF
-+"<p style='text-align:center;padding-top:30px;'><span style='color:#fff;background:#ff5050;box-shadow:#ffe000 5px 5px 2px;padding:5px 50px;font-size:24px;font-weight:600;'>308 Permanent Redirect</span></p>" CRLF
++"<head>" CRLF
++"  <meta charset='utf-8'>" CRLF
++"  <meta name='viewport' content='width=device-width, initial-scale=1.0'>" CRLF
++"  <title>308 Permanent Redirect</title>" CRLF
++"  <style>" CRLF
++"    * { margin: 0; padding: 0; box-sizing: border-box; }" CRLF
++"    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; }" CRLF
++"    .container { text-align: center; padding: 40px; max-width: 600px; }" CRLF
++"    .error-code { font-size: 120px; font-weight: 900; color: #fff; text-shadow: 0 10px 30px rgba(0,0,0,0.3); margin-bottom: 20px; }" CRLF
++"    h1 { color: #fff; font-size: 36px; margin-bottom: 16px; font-weight: 600; }" CRLF
++"  </style>" CRLF
++"</head>" CRLF
++"<body>" CRLF
++"<div class='container'>" CRLF
++"  <div class='error-code'>308</div>" CRLF
++"  <h1>Permanent Redirect</h1>" CRLF
++"</div>" CRLF
  ;
  
  
-@@ -101,7 +98,7 @@ static char ngx_http_error_400_page[] =
+ static char ngx_http_error_400_page[] =
  "<html>" CRLF
- "<head><title>400 Bad Request</title></head>" CRLF
- "<body>" CRLF
+-"<head><title>400 Bad Request</title></head>" CRLF
+-"<body>" CRLF
 -"<center><h1>400 Bad Request</h1></center>" CRLF
-+"<p style='text-align:center;padding-top:30px;'><span style='color:#fff;background:#ff5050;box-shadow:#ffe000 5px 5px 2px;padding:5px 50px;font-size:24px;font-weight:600;'>400 Bad Request</span></p>" CRLF
++"<head>" CRLF
++"  <meta charset='utf-8'>" CRLF
++"  <meta name='viewport' content='width=device-width, initial-scale=1.0'>" CRLF
++"  <title>400 Bad Request</title>" CRLF
++"  <style>" CRLF
++"    * { margin: 0; padding: 0; box-sizing: border-box; }" CRLF
++"    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; }" CRLF
++"    .container { text-align: center; padding: 40px; max-width: 600px; }" CRLF
++"    .error-code { font-size: 120px; font-weight: 900; color: #fff; text-shadow: 0 10px 30px rgba(0,0,0,0.3); margin-bottom: 20px; }" CRLF
++"    h1 { color: #fff; font-size: 36px; margin-bottom: 16px; font-weight: 600; }" CRLF
++"    .description { color: rgba(255,255,255,0.8); font-size: 16px; line-height: 1.8; margin-bottom: 30px; }" CRLF
++"    .description-cn { margin-bottom: 12px; }" CRLF
++"    .description-en { font-size: 14px; opacity: 0.85; }" CRLF
++"  </style>" CRLF
++"</head>" CRLF
++"<body>" CRLF
++"<div class='container'>" CRLF
++"  <div class='error-code'>400</div>" CRLF
++"  <h1>Bad Request</h1>" CRLF
++"  <div class='description'>" CRLF
++"    <div class='description-en'>Invalid request format.</div>" CRLF
++"    <div class='description-cn'>请求格式有误</div>" CRLF
++"  </div>" CRLF
++"</div>" CRLF
  ;
  
  
-@@ -109,7 +106,7 @@ static char ngx_http_error_401_page[] =
+ static char ngx_http_error_401_page[] =
  "<html>" CRLF
- "<head><title>401 Authorization Required</title></head>" CRLF
- "<body>" CRLF
+-"<head><title>401 Authorization Required</title></head>" CRLF
+-"<body>" CRLF
 -"<center><h1>401 Authorization Required</h1></center>" CRLF
-+"<p style='text-align:center;padding-top:30px;'><span style='color:#fff;background:#ff5050;box-shadow:#ffe000 5px 5px 2px;padding:5px 50px;font-size:24px;font-weight:600;'>401 Authorization Required</span></p>" CRLF
++"<head>" CRLF
++"  <meta charset='utf-8'>" CRLF
++"  <meta name='viewport' content='width=device-width, initial-scale=1.0'>" CRLF
++"  <title>401 Unauthorized</title>" CRLF
++"  <style>" CRLF
++"    * { margin: 0; padding: 0; box-sizing: border-box; }" CRLF
++"    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; }" CRLF
++"    .container { text-align: center; padding: 40px; max-width: 600px; }" CRLF
++"    .error-code { font-size: 120px; font-weight: 900; color: #fff; text-shadow: 0 10px 30px rgba(0,0,0,0.3); margin-bottom: 20px; }" CRLF
++"    h1 { color: #fff; font-size: 36px; margin-bottom: 16px; font-weight: 600; }" CRLF
++"    .description { color: rgba(255,255,255,0.8); font-size: 16px; line-height: 1.8; margin-bottom: 30px; }" CRLF
++"    .description-cn { margin-bottom: 12px; }" CRLF
++"    .description-en { font-size: 14px; opacity: 0.85; }" CRLF
++"  </style>" CRLF
++"</head>" CRLF
++"<body>" CRLF
++"<div class='container'>" CRLF
++"  <div class='error-code'>401</div>" CRLF
++"  <h1>Unauthorized</h1>" CRLF
++"  <div class='description'>" CRLF
++"    <div class='description-en'>Authentication required. Please log in or provide valid credentials.</div>" CRLF
++"    <div class='description-cn'>需要身份验证，请登录或提供有效的凭据</div>" CRLF
++"  </div>" CRLF
++"</div>" CRLF
  ;
  
  
-@@ -117,7 +114,7 @@ static char ngx_http_error_402_page[] =
+ static char ngx_http_error_402_page[] =
  "<html>" CRLF
- "<head><title>402 Payment Required</title></head>" CRLF
- "<body>" CRLF
+-"<head><title>402 Payment Required</title></head>" CRLF
+-"<body>" CRLF
 -"<center><h1>402 Payment Required</h1></center>" CRLF
-+"<p style='text-align:center;padding-top:30px;'><span style='color:#fff;background:#ff5050;box-shadow:#ffe000 5px 5px 2px;padding:5px 50px;font-size:24px;font-weight:600;'>402 Payment Required</span></p>" CRLF
++"<head>" CRLF
++"  <meta charset='utf-8'>" CRLF
++"  <meta name='viewport' content='width=device-width, initial-scale=1.0'>" CRLF
++"  <title>402 Payment Required</title>" CRLF
++"  <style>" CRLF
++"    * { margin: 0; padding: 0; box-sizing: border-box; }" CRLF
++"    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; }" CRLF
++"    .container { text-align: center; padding: 40px; max-width: 600px; }" CRLF
++"    .error-code { font-size: 120px; font-weight: 900; color: #fff; text-shadow: 0 10px 30px rgba(0,0,0,0.3); margin-bottom: 20px; }" CRLF
++"    h1 { color: #fff; font-size: 36px; margin-bottom: 16px; font-weight: 600; }" CRLF
++"    .description { color: rgba(255,255,255,0.8); font-size: 16px; line-height: 1.8; margin-bottom: 30px; }" CRLF
++"    .description-cn { margin-bottom: 12px; }" CRLF
++"    .description-en { font-size: 14px; opacity: 0.85; }" CRLF
++"  </style>" CRLF
++"</head>" CRLF
++"<body>" CRLF
++"<div class='container'>" CRLF
++"  <div class='error-code'>402</div>" CRLF
++"  <h1>Payment Required</h1>" CRLF
++"  <div class='description'>" CRLF
++"    <div class='description-en'>Payment is required.</div>" CRLF
++"    <div class='description-cn'>需要付款</div>" CRLF
++"  </div>" CRLF
++"</div>" CRLF
  ;
  
  
-@@ -125,7 +122,7 @@ static char ngx_http_error_403_page[] =
+ static char ngx_http_error_403_page[] =
  "<html>" CRLF
- "<head><title>403 Forbidden</title></head>" CRLF
- "<body>" CRLF
+-"<head><title>403 Forbidden</title></head>" CRLF
+-"<body>" CRLF
 -"<center><h1>403 Forbidden</h1></center>" CRLF
-+"<p style='text-align:center;padding-top:30px;'><span style='color:#fff;background:#ff5050;box-shadow:#ffe000 5px 5px 2px;padding:5px 50px;font-size:24px;font-weight:600;'>403 Forbidden</span></p>" CRLF
++"<head>" CRLF
++"  <meta charset='utf-8'>" CRLF
++"  <meta name='viewport' content='width=device-width, initial-scale=1.0'>" CRLF
++"  <title>403 Forbidden</title>" CRLF
++"  <style>" CRLF
++"    * { margin: 0; padding: 0; box-sizing: border-box; }" CRLF
++"    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; }" CRLF
++"    .container { text-align: center; padding: 40px; max-width: 600px; }" CRLF
++"    .error-code { font-size: 120px; font-weight: 900; color: #fff; text-shadow: 0 10px 30px rgba(0,0,0,0.3); margin-bottom: 20px; }" CRLF
++"    h1 { color: #fff; font-size: 36px; margin-bottom: 16px; font-weight: 600; }" CRLF
++"    .description { color: rgba(255,255,255,0.8); font-size: 16px; line-height: 1.8; margin-bottom: 30px; }" CRLF
++"    .description-cn { margin-bottom: 12px; }" CRLF
++"    .description-en { font-size: 14px; opacity: 0.85; }" CRLF
++"  </style>" CRLF
++"</head>" CRLF
++"<body>" CRLF
++"<div class='container'>" CRLF
++"  <div class='error-code'>403</div>" CRLF
++"  <h1>Forbidden</h1>" CRLF
++"  <div class='description'>" CRLF
++"    <div class='description-en'>You don't have permission to access this resource.</div>" CRLF
++"    <div class='description-cn'>没有权限访问此资源</div>" CRLF
++"  </div>" CRLF
++"</div>" CRLF
  ;
  
  
-@@ -133,7 +130,7 @@ static char ngx_http_error_404_page[] =
+ static char ngx_http_error_404_page[] =
  "<html>" CRLF
- "<head><title>404 Not Found</title></head>" CRLF
- "<body>" CRLF
+-"<head><title>404 Not Found</title></head>" CRLF
+-"<body>" CRLF
 -"<center><h1>404 Not Found</h1></center>" CRLF
-+"<p style='text-align:center;padding-top:30px;'><span style='color:#fff;background:#ff5050;box-shadow:#ffe000 5px 5px 2px;padding:5px 50px;font-size:24px;font-weight:600;'>404 Not Found</span></p>" CRLF
++"<head>" CRLF
++"  <meta charset='utf-8'>" CRLF
++"  <meta name='viewport' content='width=device-width, initial-scale=1.0'>" CRLF
++"  <title>404 Not Found</title>" CRLF
++"  <style>" CRLF
++"    * { margin: 0; padding: 0; box-sizing: border-box; }" CRLF
++"    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; }" CRLF
++"    .container { text-align: center; padding: 40px; max-width: 600px; }" CRLF
++"    .error-code { font-size: 120px; font-weight: 900; color: #fff; text-shadow: 0 10px 30px rgba(0,0,0,0.3); margin-bottom: 20px; }" CRLF
++"    h1 { color: #fff; font-size: 36px; margin-bottom: 16px; font-weight: 600; }" CRLF
++"    .description { color: rgba(255,255,255,0.8); font-size: 16px; line-height: 1.8; margin-bottom: 30px; }" CRLF
++"    .description-cn { margin-bottom: 12px; }" CRLF
++"    .description-en { font-size: 14px; opacity: 0.85; }" CRLF
++"  </style>" CRLF
++"</head>" CRLF
++"<body>" CRLF
++"<div class='container'>" CRLF
++"  <div class='error-code'>404</div>" CRLF
++"  <h1>Not Found</h1>" CRLF
++"  <div class='description'>" CRLF
++"    <div class='description-en'>The page you're looking for doesn't exist or has been deleted.</div>" CRLF
++"    <div class='description-cn'>访问的页面不存在或已被删除</div>" CRLF
++"  </div>" CRLF
++"</div>" CRLF
  ;
  
  
-@@ -141,7 +138,7 @@ static char ngx_http_error_405_page[] =
+ static char ngx_http_error_405_page[] =
  "<html>" CRLF
- "<head><title>405 Not Allowed</title></head>" CRLF
- "<body>" CRLF
+-"<head><title>405 Not Allowed</title></head>" CRLF
+-"<body>" CRLF
 -"<center><h1>405 Not Allowed</h1></center>" CRLF
-+"<p style='text-align:center;padding-top:30px;'><span style='color:#fff;background:#ff5050;box-shadow:#ffe000 5px 5px 2px;padding:5px 50px;font-size:24px;font-weight:600;'>405 Not Allowed</span></p>" CRLF
++"<head>" CRLF
++"  <meta charset='utf-8'>" CRLF
++"  <meta name='viewport' content='width=device-width, initial-scale=1.0'>" CRLF
++"  <title>405 Method Not Allowed</title>" CRLF
++"  <style>" CRLF
++"    * { margin: 0; padding: 0; box-sizing: border-box; }" CRLF
++"    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; }" CRLF
++"    .container { text-align: center; padding: 40px; max-width: 600px; }" CRLF
++"    .error-code { font-size: 120px; font-weight: 900; color: #fff; text-shadow: 0 10px 30px rgba(0,0,0,0.3); margin-bottom: 20px; }" CRLF
++"    h1 { color: #fff; font-size: 36px; margin-bottom: 16px; font-weight: 600; }" CRLF
++"    .description { color: rgba(255,255,255,0.8); font-size: 16px; line-height: 1.8; margin-bottom: 30px; }" CRLF
++"    .description-cn { margin-bottom: 12px; }" CRLF
++"    .description-en { font-size: 14px; opacity: 0.85; }" CRLF
++"  </style>" CRLF
++"</head>" CRLF
++"<body>" CRLF
++"<div class='container'>" CRLF
++"  <div class='error-code'>405</div>" CRLF
++"  <h1>Method Not Allowed</h1>" CRLF
++"  <div class='description'>" CRLF
++"    <div class='description-en'>The request method used is not supported for this resource.</div>" CRLF
++"    <div class='description-cn'>请求方法有误</div>" CRLF
++"  </div>" CRLF
++"</div>" CRLF
  ;
  
  
-@@ -149,7 +146,7 @@ static char ngx_http_error_406_page[] =
+ static char ngx_http_error_406_page[] =
  "<html>" CRLF
- "<head><title>406 Not Acceptable</title></head>" CRLF
- "<body>" CRLF
+-"<head><title>406 Not Acceptable</title></head>" CRLF
+-"<body>" CRLF
 -"<center><h1>406 Not Acceptable</h1></center>" CRLF
-+"<p style='text-align:center;padding-top:30px;'><span style='color:#fff;background:#ff5050;box-shadow:#ffe000 5px 5px 2px;padding:5px 50px;font-size:24px;font-weight:600;'>406 Not Acceptable</span></p>" CRLF
++"<head>" CRLF
++"  <meta charset='utf-8'>" CRLF
++"  <meta name='viewport' content='width=device-width, initial-scale=1.0'>" CRLF
++"  <title>406 Not Acceptable</title>" CRLF
++"  <style>" CRLF
++"    * { margin: 0; padding: 0; box-sizing: border-box; }" CRLF
++"    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; }" CRLF
++"    .container { text-align: center; padding: 40px; max-width: 600px; }" CRLF
++"    .error-code { font-size: 120px; font-weight: 900; color: #fff; text-shadow: 0 10px 30px rgba(0,0,0,0.3); margin-bottom: 20px; }" CRLF
++"    h1 { color: #fff; font-size: 36px; margin-bottom: 16px; font-weight: 600; }" CRLF
++"    .description { color: rgba(255,255,255,0.8); font-size: 16px; line-height: 1.8; margin-bottom: 30px; }" CRLF
++"    .description-cn { margin-bottom: 12px; }" CRLF
++"    .description-en { font-size: 14px; opacity: 0.85; }" CRLF
++"  </style>" CRLF
++"</head>" CRLF
++"<body>" CRLF
++"<div class='container'>" CRLF
++"  <div class='error-code'>406</div>" CRLF
++"  <h1>Not Acceptable</h1>" CRLF
++"  <div class='description'>" CRLF
++"    <div class='description-en'>The server cannot provide content in the requested format.</div>" CRLF
++"    <div class='description-cn'>服务器无法提供符合要求的内容格式</div>" CRLF
++"  </div>" CRLF
++"</div>" CRLF
  ;
  
  
-@@ -157,7 +154,7 @@ static char ngx_http_error_407_page[] =
+ static char ngx_http_error_407_page[] =
  "<html>" CRLF
- "<head><title>407 Proxy Authentication Required</title></head>" CRLF
- "<body>" CRLF
+-"<head><title>407 Proxy Authentication Required</title></head>" CRLF
+-"<body>" CRLF
 -"<center><h1>407 Proxy Authentication Required</h1></center>" CRLF
-+"<p style='text-align:center;padding-top:30px;'><span style='color:#fff;background:#ff5050;box-shadow:#ffe000 5px 5px 2px;padding:5px 50px;font-size:24px;font-weight:600;'>407 Proxy Authentication Required</span></p>" CRLF
++"<head>" CRLF
++"  <meta charset='utf-8'>" CRLF
++"  <meta name='viewport' content='width=device-width, initial-scale=1.0'>" CRLF
++"  <title>407 Proxy Authentication Required</title>" CRLF
++"  <style>" CRLF
++"    * { margin: 0; padding: 0; box-sizing: border-box; }" CRLF
++"    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; }" CRLF
++"    .container { text-align: center; padding: 40px; max-width: 600px; }" CRLF
++"    .error-code { font-size: 120px; font-weight: 900; color: #fff; text-shadow: 0 10px 30px rgba(0,0,0,0.3); margin-bottom: 20px; }" CRLF
++"    h1 { color: #fff; font-size: 36px; margin-bottom: 16px; font-weight: 600; }" CRLF
++"    .description { color: rgba(255,255,255,0.8); font-size: 16px; line-height: 1.8; margin-bottom: 30px; }" CRLF
++"    .description-cn { margin-bottom: 12px; }" CRLF
++"    .description-en { font-size: 14px; opacity: 0.85; }" CRLF
++"  </style>" CRLF
++"</head>" CRLF
++"<body>" CRLF
++"<div class='container'>" CRLF
++"  <div class='error-code'>407</div>" CRLF
++"  <h1>Proxy Authentication Required</h1>" CRLF
++"  <div class='description'>" CRLF
++"    <div class='description-en'>Proxy authentication is required. Please configure your proxy.</div>" CRLF
++"    <div class='description-cn'>需要代理认证，请配置代理凭证</div>" CRLF
++"  </div>" CRLF
++"</div>" CRLF
  ;
  
  
-@@ -165,7 +162,7 @@ static char ngx_http_error_408_page[] =
+ static char ngx_http_error_408_page[] =
  "<html>" CRLF
- "<head><title>408 Request Time-out</title></head>" CRLF
- "<body>" CRLF
+-"<head><title>408 Request Time-out</title></head>" CRLF
+-"<body>" CRLF
 -"<center><h1>408 Request Time-out</h1></center>" CRLF
-+"<p style='text-align:center;padding-top:30px;'><span style='color:#fff;background:#ff5050;box-shadow:#ffe000 5px 5px 2px;padding:5px 50px;font-size:24px;font-weight:600;'>408 Request Time-out</span></p>" CRLF
++"<head>" CRLF
++"  <meta charset='utf-8'>" CRLF
++"  <meta name='viewport' content='width=device-width, initial-scale=1.0'>" CRLF
++"  <title>408 Request Timeout</title>" CRLF
++"  <style>" CRLF
++"    * { margin: 0; padding: 0; box-sizing: border-box; }" CRLF
++"    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; }" CRLF
++"    .container { text-align: center; padding: 40px; max-width: 600px; }" CRLF
++"    .error-code { font-size: 120px; font-weight: 900; color: #fff; text-shadow: 0 10px 30px rgba(0,0,0,0.3); margin-bottom: 20px; }" CRLF
++"    h1 { color: #fff; font-size: 36px; margin-bottom: 16px; font-weight: 600; }" CRLF
++"    .description { color: rgba(255,255,255,0.8); font-size: 16px; line-height: 1.8; margin-bottom: 30px; }" CRLF
++"    .description-cn { margin-bottom: 12px; }" CRLF
++"    .description-en { font-size: 14px; opacity: 0.85; }" CRLF
++"  </style>" CRLF
++"</head>" CRLF
++"<body>" CRLF
++"<div class='container'>" CRLF
++"  <div class='error-code'>408</div>" CRLF
++"  <h1>Request Timeout</h1>" CRLF
++"  <div class='description'>" CRLF
++"    <div class='description-en'>Request timed out.</div>" CRLF
++"    <div class='description-cn'>请求超时</div>" CRLF
++"  </div>" CRLF
++"</div>" CRLF
  ;
  
  
-@@ -173,7 +170,7 @@ static char ngx_http_error_409_page[] =
+ static char ngx_http_error_409_page[] =
  "<html>" CRLF
- "<head><title>409 Conflict</title></head>" CRLF
- "<body>" CRLF
+-"<head><title>409 Conflict</title></head>" CRLF
+-"<body>" CRLF
 -"<center><h1>409 Conflict</h1></center>" CRLF
-+"<p style='text-align:center;padding-top:30px;'><span style='color:#fff;background:#ff5050;box-shadow:#ffe000 5px 5px 2px;padding:5px 50px;font-size:24px;font-weight:600;'>409 Conflict</span></p>" CRLF
++"<head>" CRLF
++"  <meta charset='utf-8'>" CRLF
++"  <meta name='viewport' content='width=device-width, initial-scale=1.0'>" CRLF
++"  <title>409 Conflict</title>" CRLF
++"  <style>" CRLF
++"    * { margin: 0; padding: 0; box-sizing: border-box; }" CRLF
++"    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; }" CRLF
++"    .container { text-align: center; padding: 40px; max-width: 600px; }" CRLF
++"    .error-code { font-size: 120px; font-weight: 900; color: #fff; text-shadow: 0 10px 30px rgba(0,0,0,0.3); margin-bottom: 20px; }" CRLF
++"    h1 { color: #fff; font-size: 36px; margin-bottom: 16px; font-weight: 600; }" CRLF
++"    .description { color: rgba(255,255,255,0.8); font-size: 16px; line-height: 1.8; margin-bottom: 30px; }" CRLF
++"    .description-cn { margin-bottom: 12px; }" CRLF
++"    .description-en { font-size: 14px; opacity: 0.85; }" CRLF
++"  </style>" CRLF
++"</head>" CRLF
++"<body>" CRLF
++"<div class='container'>" CRLF
++"  <div class='error-code'>409</div>" CRLF
++"  <h1>Conflict</h1>" CRLF
++"  <div class='description'>" CRLF
++"    <div class='description-en'>Your request conflicts with the server's current state.</div>" CRLF
++"    <div class='description-cn'>请求与服务器当前状态冲突</div>" CRLF
++"  </div>" CRLF
++"</div>" CRLF
  ;
  
  
-@@ -181,7 +178,7 @@ static char ngx_http_error_410_page[] =
+ static char ngx_http_error_410_page[] =
  "<html>" CRLF
- "<head><title>410 Gone</title></head>" CRLF
- "<body>" CRLF
+-"<head><title>410 Gone</title></head>" CRLF
+-"<body>" CRLF
 -"<center><h1>410 Gone</h1></center>" CRLF
-+"<p style='text-align:center;padding-top:30px;'><span style='color:#fff;background:#ff5050;box-shadow:#ffe000 5px 5px 2px;padding:5px 50px;font-size:24px;font-weight:600;'>410 Gone</span></p>" CRLF
++"<head>" CRLF
++"  <meta charset='utf-8'>" CRLF
++"  <meta name='viewport' content='width=device-width, initial-scale=1.0'>" CRLF
++"  <title>410 Gone</title>" CRLF
++"  <style>" CRLF
++"    * { margin: 0; padding: 0; box-sizing: border-box; }" CRLF
++"    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; }" CRLF
++"    .container { text-align: center; padding: 40px; max-width: 600px; }" CRLF
++"    .error-code { font-size: 120px; font-weight: 900; color: #fff; text-shadow: 0 10px 30px rgba(0,0,0,0.3); margin-bottom: 20px; }" CRLF
++"    h1 { color: #fff; font-size: 36px; margin-bottom: 16px; font-weight: 600; }" CRLF
++"    .description { color: rgba(255,255,255,0.8); font-size: 16px; line-height: 1.8; margin-bottom: 30px; }" CRLF
++"    .description-cn { margin-bottom: 12px; }" CRLF
++"    .description-en { font-size: 14px; opacity: 0.85; }" CRLF
++"  </style>" CRLF
++"</head>" CRLF
++"<body>" CRLF
++"<div class='container'>" CRLF
++"  <div class='error-code'>410</div>" CRLF
++"  <h1>Gone</h1>" CRLF
++"  <div class='description'>" CRLF
++"    <div class='description-en'>The requested resource has been permanently deleted.</div>" CRLF
++"    <div class='description-cn'>请求的资源已被永久删除</div>" CRLF
++"  </div>" CRLF
++"</div>" CRLF
  ;
  
  
-@@ -189,7 +186,7 @@ static char ngx_http_error_411_page[] =
+ static char ngx_http_error_411_page[] =
  "<html>" CRLF
- "<head><title>411 Length Required</title></head>" CRLF
- "<body>" CRLF
+-"<head><title>411 Length Required</title></head>" CRLF
+-"<body>" CRLF
 -"<center><h1>411 Length Required</h1></center>" CRLF
-+"<p style='text-align:center;padding-top:30px;'><span style='color:#fff;background:#ff5050;box-shadow:#ffe000 5px 5px 2px;padding:5px 50px;font-size:24px;font-weight:600;'>411 Length Required</span></p>" CRLF
++"<head>" CRLF
++"  <meta charset='utf-8'>" CRLF
++"  <meta name='viewport' content='width=device-width, initial-scale=1.0'>" CRLF
++"  <title>411 Length Required</title>" CRLF
++"  <style>" CRLF
++"    * { margin: 0; padding: 0; box-sizing: border-box; }" CRLF
++"    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; }" CRLF
++"    .container { text-align: center; padding: 40px; max-width: 600px; }" CRLF
++"    .error-code { font-size: 120px; font-weight: 900; color: #fff; text-shadow: 0 10px 30px rgba(0,0,0,0.3); margin-bottom: 20px; }" CRLF
++"    h1 { color: #fff; font-size: 36px; margin-bottom: 16px; font-weight: 600; }" CRLF
++"    .description { color: rgba(255,255,255,0.8); font-size: 16px; line-height: 1.8; margin-bottom: 30px; }" CRLF
++"    .description-cn { margin-bottom: 12px; }" CRLF
++"    .description-en { font-size: 14px; opacity: 0.85; }" CRLF
++"  </style>" CRLF
++"</head>" CRLF
++"<body>" CRLF
++"<div class='container'>" CRLF
++"  <div class='error-code'>411</div>" CRLF
++"  <h1>Length Required</h1>" CRLF
++"  <div class='description'>" CRLF
++"    <div class='description-en'>Request is missing the required Content-Length header.</div>" CRLF
++"    <div class='description-cn'>请求缺少 Content-Length 头信息</div>" CRLF
++"  </div>" CRLF
++"</div>" CRLF
  ;
  
  
-@@ -197,7 +194,7 @@ static char ngx_http_error_412_page[] =
+ static char ngx_http_error_412_page[] =
  "<html>" CRLF
- "<head><title>412 Precondition Failed</title></head>" CRLF
- "<body>" CRLF
+-"<head><title>412 Precondition Failed</title></head>" CRLF
+-"<body>" CRLF
 -"<center><h1>412 Precondition Failed</h1></center>" CRLF
-+"<p style='text-align:center;padding-top:30px;'><span style='color:#fff;background:#ff5050;box-shadow:#ffe000 5px 5px 2px;padding:5px 50px;font-size:24px;font-weight:600;'>412 Precondition Failed</span></p>" CRLF
++"<head>" CRLF
++"  <meta charset='utf-8'>" CRLF
++"  <meta name='viewport' content='width=device-width, initial-scale=1.0'>" CRLF
++"  <title>412 Precondition Failed</title>" CRLF
++"  <style>" CRLF
++"    * { margin: 0; padding: 0; box-sizing: border-box; }" CRLF
++"    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; }" CRLF
++"    .container { text-align: center; padding: 40px; max-width: 600px; }" CRLF
++"    .error-code { font-size: 120px; font-weight: 900; color: #fff; text-shadow: 0 10px 30px rgba(0,0,0,0.3); margin-bottom: 20px; }" CRLF
++"    h1 { color: #fff; font-size: 36px; margin-bottom: 16px; font-weight: 600; }" CRLF
++"    .description { color: rgba(255,255,255,0.8); font-size: 16px; line-height: 1.8; margin-bottom: 30px; }" CRLF
++"    .description-cn { margin-bottom: 12px; }" CRLF
++"    .description-en { font-size: 14px; opacity: 0.85; }" CRLF
++"  </style>" CRLF
++"</head>" CRLF
++"<body>" CRLF
++"<div class='container'>" CRLF
++"  <div class='error-code'>412</div>" CRLF
++"  <h1>Precondition Failed</h1>" CRLF
++"  <div class='description'>" CRLF
++"    <div class='description-en'>The precondition for the request is not met.</div>" CRLF
++"    <div class='description-cn'>请求的前置条件不满足</div>" CRLF
++"  </div>" CRLF
++"</div>" CRLF
  ;
  
  
-@@ -205,7 +202,7 @@ static char ngx_http_error_413_page[] =
+ static char ngx_http_error_413_page[] =
  "<html>" CRLF
- "<head><title>413 Request Entity Too Large</title></head>" CRLF
- "<body>" CRLF
+-"<head><title>413 Request Entity Too Large</title></head>" CRLF
+-"<body>" CRLF
 -"<center><h1>413 Request Entity Too Large</h1></center>" CRLF
-+"<p style='text-align:center;padding-top:30px;'><span style='color:#fff;background:#ff5050;box-shadow:#ffe000 5px 5px 2px;padding:5px 50px;font-size:24px;font-weight:600;'>413 Request Entity Too Large</span></p>" CRLF
++"<head>" CRLF
++"  <meta charset='utf-8'>" CRLF
++"  <meta name='viewport' content='width=device-width, initial-scale=1.0'>" CRLF
++"  <title>413 Payload Too Large</title>" CRLF
++"  <style>" CRLF
++"    * { margin: 0; padding: 0; box-sizing: border-box; }" CRLF
++"    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; }" CRLF
++"    .container { text-align: center; padding: 40px; max-width: 600px; }" CRLF
++"    .error-code { font-size: 120px; font-weight: 900; color: #fff; text-shadow: 0 10px 30px rgba(0,0,0,0.3); margin-bottom: 20px; }" CRLF
++"    h1 { color: #fff; font-size: 36px; margin-bottom: 16px; font-weight: 600; }" CRLF
++"    .description { color: rgba(255,255,255,0.8); font-size: 16px; line-height: 1.8; margin-bottom: 30px; }" CRLF
++"    .description-cn { margin-bottom: 12px; }" CRLF
++"    .description-en { font-size: 14px; opacity: 0.85; }" CRLF
++"  </style>" CRLF
++"</head>" CRLF
++"<body>" CRLF
++"<div class='container'>" CRLF
++"  <div class='error-code'>413</div>" CRLF
++"  <h1>Payload Too Large</h1>" CRLF
++"  <div class='description'>" CRLF
++"    <div class='description-en'>The payload is too large. </div>" CRLF
++"    <div class='description-cn'>请求载荷过大</div>" CRLF
++"  </div>" CRLF
++"</div>" CRLF
  ;
  
  
-@@ -213,7 +210,7 @@ static char ngx_http_error_414_page[] =
+ static char ngx_http_error_414_page[] =
  "<html>" CRLF
- "<head><title>414 Request-URI Too Large</title></head>" CRLF
- "<body>" CRLF
+-"<head><title>414 Request-URI Too Large</title></head>" CRLF
+-"<body>" CRLF
 -"<center><h1>414 Request-URI Too Large</h1></center>" CRLF
-+"<p style='text-align:center;padding-top:30px;'><span style='color:#fff;background:#ff5050;box-shadow:#ffe000 5px 5px 2px;padding:5px 50px;font-size:24px;font-weight:600;'>414 Request-URI Too Large</span></p>" CRLF
++"<head>" CRLF
++"  <meta charset='utf-8'>" CRLF
++"  <meta name='viewport' content='width=device-width, initial-scale=1.0'>" CRLF
++"  <title>414 URI Too Long</title>" CRLF
++"  <style>" CRLF
++"    * { margin: 0; padding: 0; box-sizing: border-box; }" CRLF
++"    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; }" CRLF
++"    .container { text-align: center; padding: 40px; max-width: 600px; }" CRLF
++"    .error-code { font-size: 120px; font-weight: 900; color: #fff; text-shadow: 0 10px 30px rgba(0,0,0,0.3); margin-bottom: 20px; }" CRLF
++"    h1 { color: #fff; font-size: 36px; margin-bottom: 16px; font-weight: 600; }" CRLF
++"    .description { color: rgba(255,255,255,0.8); font-size: 16px; line-height: 1.8; margin-bottom: 30px; }" CRLF
++"    .description-cn { margin-bottom: 12px; }" CRLF
++"    .description-en { font-size: 14px; opacity: 0.85; }" CRLF
++"  </style>" CRLF
++"</head>" CRLF
++"<body>" CRLF
++"<div class='container'>" CRLF
++"  <div class='error-code'>414</div>" CRLF
++"  <h1>URI Too Long</h1>" CRLF
++"  <div class='description'>" CRLF
++"    <div class='description-en'>The request URL is too long for the server to process.</div>" CRLF
++"    <div class='description-cn'>请求 URL 过长</div>" CRLF
++"  </div>" CRLF
++"</div>" CRLF
  ;
  
  
-@@ -221,7 +218,7 @@ static char ngx_http_error_415_page[] =
+ static char ngx_http_error_415_page[] =
  "<html>" CRLF
- "<head><title>415 Unsupported Media Type</title></head>" CRLF
- "<body>" CRLF
+-"<head><title>415 Unsupported Media Type</title></head>" CRLF
+-"<body>" CRLF
 -"<center><h1>415 Unsupported Media Type</h1></center>" CRLF
-+"<p style='text-align:center;padding-top:30px;'><span style='color:#fff;background:#ff5050;box-shadow:#ffe000 5px 5px 2px;padding:5px 50px;font-size:24px;font-weight:600;'>415 Unsupported Media Type</span></p>" CRLF
++"<head>" CRLF
++"  <meta charset='utf-8'>" CRLF
++"  <meta name='viewport' content='width=device-width, initial-scale=1.0'>" CRLF
++"  <title>415 Unsupported Media Type</title>" CRLF
++"  <style>" CRLF
++"    * { margin: 0; padding: 0; box-sizing: border-box; }" CRLF
++"    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; }" CRLF
++"    .container { text-align: center; padding: 40px; max-width: 600px; }" CRLF
++"    .error-code { font-size: 120px; font-weight: 900; color: #fff; text-shadow: 0 10px 30px rgba(0,0,0,0.3); margin-bottom: 20px; }" CRLF
++"    h1 { color: #fff; font-size: 36px; margin-bottom: 16px; font-weight: 600; }" CRLF
++"    .description { color: rgba(255,255,255,0.8); font-size: 16px; line-height: 1.8; margin-bottom: 30px; }" CRLF
++"    .description-cn { margin-bottom: 12px; }" CRLF
++"    .description-en { font-size: 14px; opacity: 0.85; }" CRLF
++"  </style>" CRLF
++"</head>" CRLF
++"<body>" CRLF
++"<div class='container'>" CRLF
++"  <div class='error-code'>415</div>" CRLF
++"  <h1>Unsupported Media Type</h1>" CRLF
++"  <div class='description'>" CRLF
++"    <div class='description-en'>The file type is not supported.</div>" CRLF
++"    <div class='description-cn'>不支持该文件类型</div>" CRLF
++"  </div>" CRLF
++"</div>" CRLF
  ;
  
  
-@@ -229,7 +226,14 @@ static char ngx_http_error_416_page[] =
+ static char ngx_http_error_416_page[] =
  "<html>" CRLF
- "<head><title>416 Requested Range Not Satisfiable</title></head>" CRLF
- "<body>" CRLF
+-"<head><title>416 Requested Range Not Satisfiable</title></head>" CRLF
+-"<body>" CRLF
 -"<center><h1>416 Requested Range Not Satisfiable</h1></center>" CRLF
-+"<p style='text-align:center;padding-top:30px;'><span style='color:#fff;background:#ff5050;box-shadow:#ffe000 5px 5px 2px;padding:5px 50px;font-size:24px;font-weight:600;'>416 Requested Range Not Satisfiable</span></p>" CRLF
++"<head>" CRLF
++"  <meta charset='utf-8'>" CRLF
++"  <meta name='viewport' content='width=device-width, initial-scale=1.0'>" CRLF
++"  <title>416 Range Not Satisfiable</title>" CRLF
++"  <style>" CRLF
++"    * { margin: 0; padding: 0; box-sizing: border-box; }" CRLF
++"    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; }" CRLF
++"    .container { text-align: center; padding: 40px; max-width: 600px; }" CRLF
++"    .error-code { font-size: 120px; font-weight: 900; color: #fff; text-shadow: 0 10px 30px rgba(0,0,0,0.3); margin-bottom: 20px; }" CRLF
++"    h1 { color: #fff; font-size: 36px; margin-bottom: 16px; font-weight: 600; }" CRLF
++"    .description { color: rgba(255,255,255,0.8); font-size: 16px; line-height: 1.8; margin-bottom: 30px; }" CRLF
++"    .description-cn { margin-bottom: 12px; }" CRLF
++"    .description-en { font-size: 14px; opacity: 0.85; }" CRLF
++"  </style>" CRLF
++"</head>" CRLF
++"<body>" CRLF
++"<div class='container'>" CRLF
++"  <div class='error-code'>416</div>" CRLF
++"  <h1>Range Not Satisfiable</h1>" CRLF
++"  <div class='description'>" CRLF
++"    <div class='description-en'>The requested range cannot be satisfied.</div>" CRLF
++"    <div class='description-cn'>无法满足请求的数据范围</div>" CRLF
++"  </div>" CRLF
++"</div>" CRLF
 +;
 +
 +static char ngx_http_error_418_page[] =
 +"<html>" CRLF
-+"<head><title>418 I'm a teapot</title></head>" CRLF
++"<head>" CRLF
++"  <meta charset='utf-8'>" CRLF
++"  <meta name='viewport' content='width=device-width, initial-scale=1.0'>" CRLF
++"  <title>418 I'm a Teapot</title>" CRLF
++"  <style>" CRLF
++"    * { margin: 0; padding: 0; box-sizing: border-box; }" CRLF
++"    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; }" CRLF
++"    .container { text-align: center; padding: 40px; max-width: 600px; }" CRLF
++"    .error-code { font-size: 120px; font-weight: 900; color: #fff; text-shadow: 0 10px 30px rgba(0,0,0,0.3); margin-bottom: 20px; }" CRLF
++"    h1 { color: #fff; font-size: 36px; margin-bottom: 16px; font-weight: 600; }" CRLF
++"  </style>" CRLF
++"</head>" CRLF
 +"<body>" CRLF
-+"<p style='text-align:center;padding-top:30px;'><span style='color:#fff;background:#ff5050;box-shadow:#ffe000 5px 5px 2px;padding:5px 50px;font-size:24px;font-weight:600;'>418 I'm a teapot</span></p>" CRLF
++"<div class='container'>" CRLF
++"  <div class='error-code'>418</div>" CRLF
++"  <h1>I'm a Teapot</h1>" CRLF
++"</div>" CRLF
  ;
  
  
-@@ -237,7 +241,7 @@ static char ngx_http_error_421_page[] =
+ static char ngx_http_error_421_page[] =
  "<html>" CRLF
- "<head><title>421 Misdirected Request</title></head>" CRLF
- "<body>" CRLF
+-"<head><title>421 Misdirected Request</title></head>" CRLF
+-"<body>" CRLF
 -"<center><h1>421 Misdirected Request</h1></center>" CRLF
-+"<p style='text-align:center;padding-top:30px;'><span style='color:#fff;background:#ff5050;box-shadow:#ffe000 5px 5px 2px;padding:5px 50px;font-size:24px;font-weight:600;'>421 Misdirected Request</span></p>" CRLF
++"<head>" CRLF
++"  <meta charset='utf-8'>" CRLF
++"  <meta name='viewport' content='width=device-width, initial-scale=1.0'>" CRLF
++"  <title>421 Misdirected Request</title>" CRLF
++"  <style>" CRLF
++"    * { margin: 0; padding: 0; box-sizing: border-box; }" CRLF
++"    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; }" CRLF
++"    .container { text-align: center; padding: 40px; max-width: 600px; }" CRLF
++"    .error-code { font-size: 120px; font-weight: 900; color: #fff; text-shadow: 0 10px 30px rgba(0,0,0,0.3); margin-bottom: 20px; }" CRLF
++"    h1 { color: #fff; font-size: 36px; margin-bottom: 16px; font-weight: 600; }" CRLF
++"    .description { color: rgba(255,255,255,0.8); font-size: 16px; line-height: 1.8; margin-bottom: 30px; }" CRLF
++"    .description-cn { margin-bottom: 12px; }" CRLF
++"    .description-en { font-size: 14px; opacity: 0.85; }" CRLF
++"  </style>" CRLF
++"</head>" CRLF
++"<body>" CRLF
++"<div class='container'>" CRLF
++"  <div class='error-code'>421</div>" CRLF
++"  <h1>Misdirected Request</h1>" CRLF
++"  <div class='description'>" CRLF
++"    <div class='description-en'>The request was sent to the wrong server.</div>" CRLF
++"    <div class='description-cn'>请求被发送到了错误的服务器</div>" CRLF
++"  </div>" CRLF
++"</div>" CRLF
++"</div>" CRLF
  ;
  
  
-@@ -245,7 +249,7 @@ static char ngx_http_error_429_page[] =
+ static char ngx_http_error_429_page[] =
  "<html>" CRLF
- "<head><title>429 Too Many Requests</title></head>" CRLF
- "<body>" CRLF
+-"<head><title>429 Too Many Requests</title></head>" CRLF
+-"<body>" CRLF
 -"<center><h1>429 Too Many Requests</h1></center>" CRLF
-+"<p style='text-align:center;padding-top:30px;'><span style='color:#fff;background:#ff5050;box-shadow:#ffe000 5px 5px 2px;padding:5px 50px;font-size:24px;font-weight:600;'>429 Too Many Requests</span></p>" CRLF
++"<head>" CRLF
++"  <meta charset='utf-8'>" CRLF
++"  <meta name='viewport' content='width=device-width, initial-scale=1.0'>" CRLF
++"  <title>429 Too Many Requests</title>" CRLF
++"  <style>" CRLF
++"    * { margin: 0; padding: 0; box-sizing: border-box; }" CRLF
++"    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; }" CRLF
++"    .container { text-align: center; padding: 40px; max-width: 600px; }" CRLF
++"    .error-code { font-size: 120px; font-weight: 900; color: #fff; text-shadow: 0 10px 30px rgba(0,0,0,0.3); margin-bottom: 20px; }" CRLF
++"    h1 { color: #fff; font-size: 36px; margin-bottom: 16px; font-weight: 600; }" CRLF
++"    .description { color: rgba(255,255,255,0.8); font-size: 16px; line-height: 1.8; margin-bottom: 30px; }" CRLF
++"    .description-cn { margin-bottom: 12px; }" CRLF
++"    .description-en { font-size: 14px; opacity: 0.85; }" CRLF
++"  </style>" CRLF
++"</head>" CRLF
++"<body>" CRLF
++"<div class='container'>" CRLF
++"  <div class='error-code'>429</div>" CRLF
++"  <h1>Too Many Requests</h1>" CRLF
++"  <div class='description'>" CRLF
++"    <div class='description-en'>Too many requests. Rate limit exceeded.</div>" CRLF
++"    <div class='description-cn'>请求过于频繁</div>" CRLF
++"  </div>" CRLF
++"</div>" CRLF
  ;
  
  
-@@ -254,7 +258,7 @@ static char ngx_http_error_494_page[] =
- "<head><title>400 Request Header Or Cookie Too Large</title></head>"
- CRLF
- "<body>" CRLF
--"<center><h1>400 Bad Request</h1></center>" CRLF
-+"<p style='text-align:center;padding-top:30px;'><span style='color:#fff;background:#ff5050;box-shadow:#ffe000 5px 5px 2px;padding:5px 50px;font-size:24px;font-weight:600;'>400 Bad Request</span></p>" CRLF
- "<center>Request Header Or Cookie Too Large</center>" CRLF
- ;
- 
-@@ -264,7 +268,7 @@ static char ngx_http_error_495_page[] =
- "<head><title>400 The SSL certificate error</title></head>"
- CRLF
- "<body>" CRLF
--"<center><h1>400 Bad Request</h1></center>" CRLF
-+"<p style='text-align:center;padding-top:30px;'><span style='color:#fff;background:#ff5050;box-shadow:#ffe000 5px 5px 2px;padding:5px 50px;font-size:24px;font-weight:600;'>400 Bad Request</span></p>" CRLF
- "<center>The SSL certificate error</center>" CRLF
- ;
- 
-@@ -274,7 +278,7 @@ static char ngx_http_error_496_page[] =
- "<head><title>400 No required SSL certificate was sent</title></head>"
- CRLF
- "<body>" CRLF
--"<center><h1>400 Bad Request</h1></center>" CRLF
-+"<p style='text-align:center;padding-top:30px;'><span style='color:#fff;background:#ff5050;box-shadow:#ffe000 5px 5px 2px;padding:5px 50px;font-size:24px;font-weight:600;'>400 Bad Request</span></p>" CRLF
- "<center>No required SSL certificate was sent</center>" CRLF
- ;
- 
-@@ -284,7 +288,7 @@ static char ngx_http_error_497_page[] =
- "<head><title>400 The plain HTTP request was sent to HTTPS port</title></head>"
- CRLF
- "<body>" CRLF
--"<center><h1>400 Bad Request</h1></center>" CRLF
-+"<p style='text-align:center;padding-top:30px;'><span style='color:#fff;background:#ff5050;box-shadow:#ffe000 5px 5px 2px;padding:5px 50px;font-size:24px;font-weight:600;'>400 Bad Request</span></p>" CRLF
- "<center>The plain HTTP request was sent to HTTPS port</center>" CRLF
- ;
- 
-@@ -293,7 +297,7 @@ static char ngx_http_error_500_page[] =
+ static char ngx_http_error_494_page[] =
  "<html>" CRLF
- "<head><title>500 Internal Server Error</title></head>" CRLF
- "<body>" CRLF
+-"<head><title>400 Request Header Or Cookie Too Large</title></head>"
+-CRLF
+-"<body>" CRLF
+-"<center><h1>400 Bad Request</h1></center>" CRLF
+-"<center>Request Header Or Cookie Too Large</center>" CRLF
++"<head>" CRLF
++"  <meta charset='utf-8'>" CRLF
++"  <meta name='viewport' content='width=device-width, initial-scale=1.0'>" CRLF
++"  <title>400 Request Header Or Cookie Too Large</title>" CRLF
++"  <style>" CRLF
++"    * { margin: 0; padding: 0; box-sizing: border-box; }" CRLF
++"    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; }" CRLF
++"    .container { text-align: center; padding: 40px; max-width: 600px; }" CRLF
++"    .error-code { font-size: 120px; font-weight: 900; color: #fff; text-shadow: 0 10px 30px rgba(0,0,0,0.3); margin-bottom: 20px; }" CRLF
++"    h1 { color: #fff; font-size: 30px; margin-bottom: 16px; font-weight: 600; }" CRLF
++"    .description { color: rgba(255,255,255,0.8); font-size: 16px; line-height: 1.8; margin-bottom: 30px; }" CRLF
++"    .description-cn { margin-bottom: 12px; }" CRLF
++"    .description-en { font-size: 14px; opacity: 0.85; }" CRLF
++"  </style>" CRLF
++"</head>" CRLF
++"<body>" CRLF
++"<div class='container'>" CRLF
++"  <div class='error-code'>400</div>" CRLF
++"  <h1>Request Header Or Cookie Too Large</h1>" CRLF
++"  <div class='description'>" CRLF
++"    <div class='description-en'>Request header is too large.</div>" CRLF
++"    <div class='description-cn'>请求头过大</div>" CRLF
++"  </div>" CRLF
++"</div>" CRLF
+ ;
+ 
+ 
+ static char ngx_http_error_495_page[] =
+ "<html>" CRLF
+-"<head><title>400 The SSL certificate error</title></head>"
+-CRLF
+-"<body>" CRLF
+-"<center><h1>400 Bad Request</h1></center>" CRLF
+-"<center>The SSL certificate error</center>" CRLF
++"<head>" CRLF
++"  <meta charset='utf-8'>" CRLF
++"  <meta name='viewport' content='width=device-width, initial-scale=1.0'>" CRLF
++"  <title>400 SSL Certificate Error</title>" CRLF
++"  <style>" CRLF
++"    * { margin: 0; padding: 0; box-sizing: border-box; }" CRLF
++"    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; }" CRLF
++"    .container { text-align: center; padding: 40px; max-width: 600px; }" CRLF
++"    .error-code { font-size: 120px; font-weight: 900; color: #fff; text-shadow: 0 10px 30px rgba(0,0,0,0.3); margin-bottom: 20px; }" CRLF
++"    h1 { color: #fff; font-size: 36px; margin-bottom: 16px; font-weight: 600; }" CRLF
++"    .description { color: rgba(255,255,255,0.8); font-size: 16px; line-height: 1.8; margin-bottom: 30px; }" CRLF
++"    .description-cn { margin-bottom: 12px; }" CRLF
++"    .description-en { font-size: 14px; opacity: 0.85; }" CRLF
++"  </style>" CRLF
++"</head>" CRLF
++"<body>" CRLF
++"<div class='container'>" CRLF
++"  <div class='error-code'>400-495</div>" CRLF
++"  <h1>SSL Certificate Error</h1>" CRLF
++"  <div class='description'>" CRLF
++"    <div class='description-en'>SSL certificate error.</div>" CRLF
++"    <div class='description-cn'>SSL 证书错误</div>" CRLF
++"  </div>" CRLF
++"</div>" CRLF
+ ;
+ 
+ 
+ static char ngx_http_error_496_page[] =
+ "<html>" CRLF
+-"<head><title>400 No required SSL certificate was sent</title></head>"
+-CRLF
+-"<body>" CRLF
+-"<center><h1>400 Bad Request</h1></center>" CRLF
+-"<center>No required SSL certificate was sent</center>" CRLF
++"<head>" CRLF
++"  <meta charset='utf-8'>" CRLF
++"  <meta name='viewport' content='width=device-width, initial-scale=1.0'>" CRLF
++"  <title>400 SSL Certificate Required</title>" CRLF
++"  <style>" CRLF
++"    * { margin: 0; padding: 0; box-sizing: border-box; }" CRLF
++"    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; }" CRLF
++"    .container { text-align: center; padding: 40px; max-width: 600px; }" CRLF
++"    .error-code { font-size: 120px; font-weight: 900; color: #fff; text-shadow: 0 10px 30px rgba(0,0,0,0.3); margin-bottom: 20px; }" CRLF
++"    h1 { color: #fff; font-size: 36px; margin-bottom: 16px; font-weight: 600; }" CRLF
++"    .description { color: rgba(255,255,255,0.8); font-size: 16px; line-height: 1.8; margin-bottom: 30px; }" CRLF
++"    .description-cn { margin-bottom: 12px; }" CRLF
++"    .description-en { font-size: 14px; opacity: 0.85; }" CRLF
++"  </style>" CRLF
++"</head>" CRLF
++"<body>" CRLF
++"<div class='container'>" CRLF
++"  <div class='error-code'>400</div>" CRLF
++"  <h1>SSL Certificate Required</h1>" CRLF
++"  <div class='description'>" CRLF
++"    <div class='description-en'>No required SSL certificate was sent.</div>" CRLF
++"    <div class='description-cn'>需要有效的 SSL 证书</div>" CRLF
++"  </div>" CRLF
++"</div>" CRLF
+ ;
+ 
+ 
+ static char ngx_http_error_497_page[] =
+ "<html>" CRLF
+-"<head><title>400 The plain HTTP request was sent to HTTPS port</title></head>"
+-CRLF
+-"<body>" CRLF
+-"<center><h1>400 Bad Request</h1></center>" CRLF
+-"<center>The plain HTTP request was sent to HTTPS port</center>" CRLF
++"<head>" CRLF
++"  <meta charset='utf-8'>" CRLF
++"  <meta name='viewport' content='width=device-width, initial-scale=1.0'>" CRLF
++"  <title>400 The plain HTTP request was sent to HTTPS port</title>" CRLF
++"  <style>" CRLF
++"    * { margin: 0; padding: 0; box-sizing: border-box; }" CRLF
++"    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; }" CRLF
++"    .container { text-align: center; padding: 40px; max-width: 600px; }" CRLF
++"    .error-code { font-size: 120px; font-weight: 900; color: #fff; text-shadow: 0 10px 30px rgba(0,0,0,0.3); margin-bottom: 20px; }" CRLF
++"    h1 { color: #fff; font-size: 30px; margin-bottom: 16px; font-weight: 600; }" CRLF
++"    .description { color: rgba(255,255,255,0.8); font-size: 16px; line-height: 1.8; margin-bottom: 30px; }" CRLF
++"    .description-cn { margin-bottom: 12px; }" CRLF
++"    .description-en { font-size: 14px; opacity: 0.85; }" CRLF
++"  </style>" CRLF
++"</head>" CRLF
++"<body>" CRLF
++"<div class='container'>" CRLF
++"  <div class='error-code'>400</div>" CRLF
++"  <h1>HTTP Request Sent to HTTPS Port</h1>" CRLF
++"  <div class='description'>" CRLF
++"    <div class='description-en'>This port only accepts HTTPS.</div>" CRLF
++"    <div class='description-cn'>此端口仅接受 HTTPS</div>" CRLF
++"  </div>" CRLF
++"</div>" CRLF
+ ;
+ 
+ 
+ static char ngx_http_error_500_page[] =
+ "<html>" CRLF
+-"<head><title>500 Internal Server Error</title></head>" CRLF
+-"<body>" CRLF
 -"<center><h1>500 Internal Server Error</h1></center>" CRLF
-+"<p style='text-align:center;padding-top:30px;'><span style='color:#fff;background:#ff5050;box-shadow:#ffe000 5px 5px 2px;padding:5px 50px;font-size:24px;font-weight:600;'>500 Internal Server Error</span></p>" CRLF
++"<head>" CRLF
++"  <meta charset='utf-8'>" CRLF
++"  <meta name='viewport' content='width=device-width, initial-scale=1.0'>" CRLF
++"  <title>500 Internal Server Error</title>" CRLF
++"  <style>" CRLF
++"    * { margin: 0; padding: 0; box-sizing: border-box; }" CRLF
++"    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: linear-gradient(135deg, #df6a8f 0%, #7560df 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; }" CRLF
++"    .container { text-align: center; padding: 40px; max-width: 600px; }" CRLF
++"    .error-code { font-size: 120px; font-weight: 900; color: #fff; text-shadow: 0 10px 30px rgba(0,0,0,0.3); margin-bottom: 20px; }" CRLF
++"    h1 { color: #fff; font-size: 36px; margin-bottom: 16px; font-weight: 600; }" CRLF
++"    .description { color: rgba(255,255,255,0.8); font-size: 16px; line-height: 1.8; margin-bottom: 30px; }" CRLF
++"    .description-cn { margin-bottom: 12px; }" CRLF
++"    .description-en { font-size: 14px; opacity: 0.85; }" CRLF
++"  </style>" CRLF
++"</head>" CRLF
++"<body>" CRLF
++"<div class='container'>" CRLF
++"  <div class='error-code'>500</div>" CRLF
++"  <h1>Internal Server Error</h1>" CRLF
++"  <div class='description'>" CRLF
++"    <div class='description-en'>The server encountered an unexpected error.</div>" CRLF
++"    <div class='description-cn'>服务器遇到了意外错误</div>" CRLF
++"  </div>" CRLF
++"</div>" CRLF
  ;
  
  
-@@ -301,7 +305,7 @@ static char ngx_http_error_501_page[] =
+ static char ngx_http_error_501_page[] =
  "<html>" CRLF
- "<head><title>501 Not Implemented</title></head>" CRLF
- "<body>" CRLF
+-"<head><title>501 Not Implemented</title></head>" CRLF
+-"<body>" CRLF
 -"<center><h1>501 Not Implemented</h1></center>" CRLF
-+"<p style='text-align:center;padding-top:30px;'><span style='color:#fff;background:#ff5050;box-shadow:#ffe000 5px 5px 2px;padding:5px 50px;font-size:24px;font-weight:600;'>501 Not Implemented</span></p>" CRLF
++"<head>" CRLF
++"  <meta charset='utf-8'>" CRLF
++"  <meta name='viewport' content='width=device-width, initial-scale=1.0'>" CRLF
++"  <title>501 Not Implemented</title>" CRLF
++"  <style>" CRLF
++"    * { margin: 0; padding: 0; box-sizing: border-box; }" CRLF
++"    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: linear-gradient(135deg, #df6a8f 0%, #7560df 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; }" CRLF
++"    .container { text-align: center; padding: 40px; max-width: 600px; }" CRLF
++"    .error-code { font-size: 120px; font-weight: 900; color: #fff; text-shadow: 0 10px 30px rgba(0,0,0,0.3); margin-bottom: 20px; }" CRLF
++"    h1 { color: #fff; font-size: 36px; margin-bottom: 16px; font-weight: 600; }" CRLF
++"    .description { color: rgba(255,255,255,0.8); font-size: 16px; line-height: 1.8; margin-bottom: 30px; }" CRLF
++"    .description-cn { margin-bottom: 12px; }" CRLF
++"    .description-en { font-size: 14px; opacity: 0.85; }" CRLF
++"  </style>" CRLF
++"</head>" CRLF
++"<body>" CRLF
++"<div class='container'>" CRLF
++"  <div class='error-code'>501</div>" CRLF
++"  <h1>Not Implemented</h1>" CRLF
++"  <div class='description'>" CRLF
++"    <div class='description-en'>Feature not supported. Method is not implemented.</div>" CRLF
++"    <div class='description-cn'>服务器不支持此功能，该方法尚未实现</div>" CRLF
++"  </div>" CRLF
++"</div>" CRLF
  ;
  
  
-@@ -309,7 +313,7 @@ static char ngx_http_error_502_page[] =
+ static char ngx_http_error_502_page[] =
  "<html>" CRLF
- "<head><title>502 Bad Gateway</title></head>" CRLF
- "<body>" CRLF
+-"<head><title>502 Bad Gateway</title></head>" CRLF
+-"<body>" CRLF
 -"<center><h1>502 Bad Gateway</h1></center>" CRLF
-+"<p style='text-align:center;padding-top:30px;'><span style='color:#fff;background:#ff5050;box-shadow:#ffe000 5px 5px 2px;padding:5px 50px;font-size:24px;font-weight:600;'>502 Bad Gateway</span></p>" CRLF
++"<head>" CRLF
++"  <meta charset='utf-8'>" CRLF
++"  <meta name='viewport' content='width=device-width, initial-scale=1.0'>" CRLF
++"  <title>502 Bad Gateway</title>" CRLF
++"  <style>" CRLF
++"    * { margin: 0; padding: 0; box-sizing: border-box; }" CRLF
++"    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: linear-gradient(135deg, #df6a8f 0%, #7560df 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; }" CRLF
++"    .container { text-align: center; padding: 40px; max-width: 600px; }" CRLF
++"    .error-code { font-size: 120px; font-weight: 900; color: #fff; text-shadow: 0 10px 30px rgba(0,0,0,0.3); margin-bottom: 20px; }" CRLF
++"    h1 { color: #fff; font-size: 36px; margin-bottom: 16px; font-weight: 600; }" CRLF
++"    .description { color: rgba(255,255,255,0.8); font-size: 16px; line-height: 1.8; margin-bottom: 30px; }" CRLF
++"    .description-cn { margin-bottom: 12px; }" CRLF
++"    .description-en { font-size: 14px; opacity: 0.85; }" CRLF
++"  </style>" CRLF
++"</head>" CRLF
++"<body>" CRLF
++"<div class='container'>" CRLF
++"  <div class='error-code'>502</div>" CRLF
++"  <h1>Bad Gateway</h1>" CRLF
++"  <div class='description'>" CRLF
++"    <div class='description-en'>The upstream server returned an invalid response. Please try again later.</div>" CRLF
++"    <div class='description-cn'>上游服务响应异常，请稍候重试</div>" CRLF
++"  </div>" CRLF
++"</div>" CRLF
  ;
  
  
-@@ -317,7 +321,7 @@ static char ngx_http_error_503_page[] =
+ static char ngx_http_error_503_page[] =
  "<html>" CRLF
- "<head><title>503 Service Temporarily Unavailable</title></head>" CRLF
- "<body>" CRLF
+-"<head><title>503 Service Temporarily Unavailable</title></head>" CRLF
+-"<body>" CRLF
 -"<center><h1>503 Service Temporarily Unavailable</h1></center>" CRLF
-+"<p style='text-align:center;padding-top:30px;'><span style='color:#fff;background:#ff5050;box-shadow:#ffe000 5px 5px 2px;padding:5px 50px;font-size:24px;font-weight:600;'>503 Service Temporarily Unavailable</span></p>" CRLF
++"<head>" CRLF
++"  <meta charset='utf-8'>" CRLF
++"  <meta name='viewport' content='width=device-width, initial-scale=1.0'>" CRLF
++"  <title>503 Service Unavailable</title>" CRLF
++"  <style>" CRLF
++"    * { margin: 0; padding: 0; box-sizing: border-box; }" CRLF
++"    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: linear-gradient(135deg, #df6a8f 0%, #7560df 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; }" CRLF
++"    .container { text-align: center; padding: 40px; max-width: 600px; }" CRLF
++"    .error-code { font-size: 120px; font-weight: 900; color: #fff; text-shadow: 0 10px 30px rgba(0,0,0,0.3); margin-bottom: 20px; }" CRLF
++"    h1 { color: #fff; font-size: 36px; margin-bottom: 16px; font-weight: 600; }" CRLF
++"    .description { color: rgba(255,255,255,0.8); font-size: 16px; line-height: 1.8; margin-bottom: 30px; }" CRLF
++"    .description-cn { margin-bottom: 12px; }" CRLF
++"    .description-en { font-size: 14px; opacity: 0.85; }" CRLF
++"  </style>" CRLF
++"</head>" CRLF
++"<body>" CRLF
++"<div class='container'>" CRLF
++"  <div class='error-code'>503</div>" CRLF
++"  <h1>Service Unavailable</h1>" CRLF
++"  <div class='description'>" CRLF
++"    <div class='description-en'>Service temporarily unavailable. Please try again later.</div>" CRLF
++"    <div class='description-cn'>服务暂时不可用，请稍候重试</div>" CRLF
++"  </div>" CRLF
++"</div>" CRLF
  ;
  
  
-@@ -325,7 +329,7 @@ static char ngx_http_error_504_page[] =
+ static char ngx_http_error_504_page[] =
  "<html>" CRLF
- "<head><title>504 Gateway Time-out</title></head>" CRLF
- "<body>" CRLF
+-"<head><title>504 Gateway Time-out</title></head>" CRLF
+-"<body>" CRLF
 -"<center><h1>504 Gateway Time-out</h1></center>" CRLF
-+"<p style='text-align:center;padding-top:30px;'><span style='color:#fff;background:#ff5050;box-shadow:#ffe000 5px 5px 2px;padding:5px 50px;font-size:24px;font-weight:600;'>504 Gateway Time-out</span></p>" CRLF
++"<head>" CRLF
++"  <meta charset='utf-8'>" CRLF
++"  <meta name='viewport' content='width=device-width, initial-scale=1.0'>" CRLF
++"  <title>504 Gateway Timeout</title>" CRLF
++"  <style>" CRLF
++"    * { margin: 0; padding: 0; box-sizing: border-box; }" CRLF
++"    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: linear-gradient(135deg, #df6a8f 0%, #7560df 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; }" CRLF
++"    .container { text-align: center; padding: 40px; max-width: 600px; }" CRLF
++"    .error-code { font-size: 120px; font-weight: 900; color: #fff; text-shadow: 0 10px 30px rgba(0,0,0,0.3); margin-bottom: 20px; }" CRLF
++"    h1 { color: #fff; font-size: 36px; margin-bottom: 16px; font-weight: 600; }" CRLF
++"    .description { color: rgba(255,255,255,0.8); font-size: 16px; line-height: 1.8; margin-bottom: 30px; }" CRLF
++"    .description-cn { margin-bottom: 12px; }" CRLF
++"    .description-en { font-size: 14px; opacity: 0.85; }" CRLF
++"  </style>" CRLF
++"</head>" CRLF
++"<body>" CRLF
++"<div class='container'>" CRLF
++"  <div class='error-code'>504</div>" CRLF
++"  <h1>Gateway Timeout</h1>" CRLF
++"  <div class='description'>" CRLF
++"    <div class='description-en'>The upstream server is not responding. Please try again later.</div>" CRLF
++"    <div class='description-cn'>上游服务器响应超时，请稍候重试</div>" CRLF
++"  </div>" CRLF
++"</div>" CRLF
  ;
  
  
-@@ -333,7 +337,7 @@ static char ngx_http_error_505_page[] =
+ static char ngx_http_error_505_page[] =
  "<html>" CRLF
- "<head><title>505 HTTP Version Not Supported</title></head>" CRLF
- "<body>" CRLF
+-"<head><title>505 HTTP Version Not Supported</title></head>" CRLF
+-"<body>" CRLF
 -"<center><h1>505 HTTP Version Not Supported</h1></center>" CRLF
-+"<p style='text-align:center;padding-top:30px;'><span style='color:#fff;background:#ff5050;box-shadow:#ffe000 5px 5px 2px;padding:5px 50px;font-size:24px;font-weight:600;'>505 HTTP Version Not Supported</span></p>" CRLF
++"<head>" CRLF
++"  <meta charset='utf-8'>" CRLF
++"  <meta name='viewport' content='width=device-width, initial-scale=1.0'>" CRLF
++"  <title>505 HTTP Version Not Supported</title>" CRLF
++"  <style>" CRLF
++"    * { margin: 0; padding: 0; box-sizing: border-box; }" CRLF
++"    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: linear-gradient(135deg, #df6a8f 0%, #7560df 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; }" CRLF
++"    .container { text-align: center; padding: 40px; max-width: 600px; }" CRLF
++"    .error-code { font-size: 120px; font-weight: 900; color: #fff; text-shadow: 0 10px 30px rgba(0,0,0,0.3); margin-bottom: 20px; }" CRLF
++"    h1 { color: #fff; font-size: 36px; margin-bottom: 16px; font-weight: 600; }" CRLF
++"    .description { color: rgba(255,255,255,0.8); font-size: 16px; line-height: 1.8; margin-bottom: 30px; }" CRLF
++"    .description-cn { margin-bottom: 12px; }" CRLF
++"    .description-en { font-size: 14px; opacity: 0.85; }" CRLF
++"  </style>" CRLF
++"</head>" CRLF
++"<body>" CRLF
++"<div class='container'>" CRLF
++"  <div class='error-code'>505</div>" CRLF
++"  <h1>HTTP Version Not Supported</h1>" CRLF
++"  <div class='description'>" CRLF
++"    <div class='description-en'>This HTTP version is not supported.</div>" CRLF
++"    <div class='description-cn'>客户端使用了服务器不支持的 HTTP 版本</div>" CRLF
++"  </div>" CRLF
++"</div>" CRLF
  ;
  
  
-@@ -341,7 +345,7 @@ static char ngx_http_error_507_page[] =
+ static char ngx_http_error_507_page[] =
  "<html>" CRLF
- "<head><title>507 Insufficient Storage</title></head>" CRLF
- "<body>" CRLF
+-"<head><title>507 Insufficient Storage</title></head>" CRLF
+-"<body>" CRLF
 -"<center><h1>507 Insufficient Storage</h1></center>" CRLF
-+"<p style='text-align:center;padding-top:30px;'><span style='color:#fff;background:#ff5050;box-shadow:#ffe000 5px 5px 2px;padding:5px 50px;font-size:24px;font-weight:600;'>507 Insufficient Storage</span></p>" CRLF
++"<head>" CRLF
++"  <meta charset='utf-8'>" CRLF
++"  <meta name='viewport' content='width=device-width, initial-scale=1.0'>" CRLF
++"  <title>507 Insufficient Storage</title>" CRLF
++"  <style>" CRLF
++"    * { margin: 0; padding: 0; box-sizing: border-box; }" CRLF
++"    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: linear-gradient(135deg, #df6a8f 0%, #7560df 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; }" CRLF
++"    .container { text-align: center; padding: 40px; max-width: 600px; }" CRLF
++"    .error-code { font-size: 120px; font-weight: 900; color: #fff; text-shadow: 0 10px 30px rgba(0,0,0,0.3); margin-bottom: 20px; }" CRLF
++"    h1 { color: #fff; font-size: 36px; margin-bottom: 16px; font-weight: 600; }" CRLF
++"    .description { color: rgba(255,255,255,0.8); font-size: 16px; line-height: 1.8; margin-bottom: 30px; }" CRLF
++"    .description-cn { margin-bottom: 12px; }" CRLF
++"    .description-en { font-size: 14px; opacity: 0.85; }" CRLF
++"  </style>" CRLF
++"</head>" CRLF
++"<body>" CRLF
++"<div class='container'>" CRLF
++"  <div class='error-code'>507</div>" CRLF
++"  <h1>Insufficient Storage</h1>" CRLF
++"  <div class='description'>" CRLF
++"    <div class='description-en'>Server storage is full. Try again later.</div>" CRLF
++"    <div class='description-cn'>服务器存储空间不足，无法完成请求，请稍候后重试</div>" CRLF
++"  </div>" CRLF
++"</div>" CRLF
  ;
  
  
-@@ -383,7 +387,7 @@ static ngx_str_t ngx_http_error_pages[]
+@@ -383,7 +1094,7 @@
      ngx_string(ngx_http_error_415_page),
      ngx_string(ngx_http_error_416_page),
      ngx_null_string,                     /* 417 */
